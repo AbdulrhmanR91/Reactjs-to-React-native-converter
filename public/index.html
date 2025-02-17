@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React to React Native Converter</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .drop-zone {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        .footer {
+            background: linear-gradient(to right, #2563eb, #1d4ed8);
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .credits {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .credits:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .github-link {
+            transition: all 0.3s ease;
+        }
+        .github-link:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 py-8 flex-grow">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">React to React Native Converter</h1>
+                <p class="text-gray-600">Upload your React project and we'll convert it to React Native</p>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Important Note</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>This tool helps speed up the conversion process from React to React Native, however:</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>You may need to review and modify the generated code</li>
+                                <li>Some libraries might need manual replacement</li>
+                                <li>Some errors may require manual fixes</li>
+                                <li>CSS styles may need additional adjustments</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/upload" method="post" enctype="multipart/form-data" class="space-y-6">
+                <div class="drop-zone p-8 text-center rounded-lg cursor-pointer" id="dropZone">
+                    <div class="space-y-4">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M24 32V16m0 0l-8 8m8-8l8 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M8 40V8a2 2 0 012-2h28a2 2 0 012 2v32" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        <div class="text-sm text-gray-600">
+                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                <span>Click to upload</span>
+                                <input id="file-upload" name="projectZip" type="file" class="sr-only" accept=".zip" required>
+                            </label>
+                            <p class="pl-1">or drag and drop your file here</p>
+                        </div>
+                        <p class="text-xs text-gray-500">ZIP files only</p>
+                    </div>
+                </div>
+
+                <div id="fileInfo" class="hidden">
+                    <div class="bg-gray-50 rounded p-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <svg class="h-6 w-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="text-sm text-gray-700" id="fileName"></span>
+                        </div>
+                        <button type="button" class="text-red-500 hover:text-red-700" id="removeFile">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="progressContainer" class="hidden">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="progress-bar bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2 text-center" id="progressText">Converting...</p>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <span>Convert Project</span>
+                        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   
+    <footer class="footer mt-auto py-8 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="credits px-6 py-3 rounded-full">
+                    <p class="text-sm">
+                        Created by 
+                        <span class="font-semibold">Abdulrhman Hussein</span>
+                    </p>
+                </div>
+                <a href="https://github.com/AbdulrhmanR91" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="github-link inline-flex items-center space-x-2 text-white hover:text-blue-200">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Follow on GitHub</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('file-upload');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const removeFile = document.getElementById('removeFile');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressText = document.getElementById('progressText');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                fileInput.files = files;
+                updateFileInfo(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                updateFileInfo(e.target.files[0]);
+            }
+        });
+
+        removeFile.addEventListener('click', () => {
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+        });
+
+        function updateFileInfo(file) {
+            fileName.textContent = file.name;
+            fileInfo.classList.remove('hidden');
+        }
+
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!fileInput.files.length) return;
+
+            const formData = new FormData();
+            formData.append('projectZip', fileInput.files[0]);
+            progressContainer.classList.remove('hidden');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                if (progress > 90) clearInterval(interval);
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `Converting... ${progress}%`;
+            }, 200);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Conversion Complete!';
+                
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'native-app.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                clearInterval(interval);
+                progressText.textContent = 'Error during conversion';
+                progressBar.style.width = '0%';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
