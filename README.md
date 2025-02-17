@@ -26,8 +26,8 @@ You can use the online version of this converter at:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/AbdulrhmanR91/Reactjs-To-React-Native.git
-cd Reactjs-To-React-Native
+git clone https://github.com/AbdulrhmanR91/Reactjs-to-React-native-converter.git
+cd Reactjs-to-React-native-converter
 ```
 
 2. Install dependencies:
