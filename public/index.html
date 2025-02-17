@@ -199,8 +199,15 @@
             e.preventDefault();
             if (!fileInput.files.length) return;
 
+            const file = fileInput.files[0];
+            console.log('Uploading file:', {
+                name: file.name,
+                type: file.type,
+                size: file.size
+            });
+
             const formData = new FormData();
-            formData.append('projectZip', fileInput.files[0]);
+            formData.append('projectZip', file);
             progressContainer.classList.remove('hidden');
             
             let progress = 0;
